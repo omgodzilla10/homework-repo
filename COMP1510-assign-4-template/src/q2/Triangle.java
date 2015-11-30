@@ -31,7 +31,6 @@ public class Triangle {
     }
     
     public void draw(Graphics page) {
-        System.out.println("Triangle draw called!");
         page.setColor(Color.BLACK);
         page.drawLine(coords[0][0], coords[0][1], coords[1][0],
                 coords[1][1]);
@@ -39,6 +38,15 @@ public class Triangle {
                 coords[2][1]);
         page.drawLine(coords[2][0], coords[2][1], coords[0][0],
                 coords[0][1]);
+
+        page.setColor(Color.RED);
+        page.fillRect(coords[0][0] - 5, coords[0][1] - 5, 10, 10);
+
+        page.setColor(Color.BLUE);
+        page.fillRect(coords[1][0] - 5, coords[1][1] - 5, 10, 10);
+
+        page.setColor(Color.GREEN);
+        page.fillRect(coords[2][0] - 5, coords[2][1] - 5, 10, 10);
     }
     
     public void scale(Point newPoint) {
@@ -56,8 +64,6 @@ public class Triangle {
 
         coords[1][0] = (int) (tempOrigin.x + (sideLength / 2));
         coords[2][0] = (int) (tempOrigin.x - (sideLength / 2));
-
-        System.out.println("Triangle height: " + triHeight);
     }
 
     public void rotate(Point newPoint) {
@@ -85,10 +91,9 @@ public class Triangle {
         double rotAngle = Math.pow(offsetLength, 2);
         rotAngle -= Math.pow(triHeight, 2);
         rotAngle -= Math.pow(newTriHeight, 2);
-        rotAngle /= (-2) * triHeight * newTriHeight;
+        rotAngle /= (-2 * triHeight * newTriHeight);
         rotAngle = Math.acos(rotAngle);
 
-        System.out.println("New tri height: " + newTriHeight);
         System.out.println("Rot around origin: " + Math.toDegrees(rotAngle));
 
         //Initialize and declare rotation matrix using angle found.
@@ -111,6 +116,12 @@ public class Triangle {
 
         coords[1][0] = (int) newXCoord;
         coords[1][1] = (int) newYCoord;
+
+        System.out.println("blue X: " + newXCoord);
+        System.out.println("blue Y: " + newYCoord);
+
+        newXCoord = 0;
+        newYCoord = 0;
 
         //Second vertex.
         newXCoord = rotMatrix[0][0] * coords[2][0];
