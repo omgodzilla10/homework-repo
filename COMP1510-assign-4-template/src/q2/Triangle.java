@@ -5,6 +5,9 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 public class Triangle {
+
+    double triHeight;
+
     /** A 2D array that holds the current X and Y coordinates
      * for each of the triangle's three points.  */
     private int[][] coords;
@@ -12,6 +15,7 @@ public class Triangle {
     private Point tempOrigin;
     
     public Triangle(Point point) {
+        triHeight = 0;
         tempOrigin = new Point(200, 200);
         coords = new int[3][2];
 
@@ -42,7 +46,7 @@ public class Triangle {
         coords[0][1] = newPoint.y;
 
         //Find distance between origin and mouse's point.
-        double triHeight = Math.pow(tempOrigin.x - newPoint.x, 2);
+        triHeight = Math.pow(tempOrigin.x - newPoint.x, 2);
         triHeight += Math.pow(tempOrigin.y - newPoint.y, 2);
         triHeight = Math.sqrt(triHeight);
 
@@ -56,7 +60,66 @@ public class Triangle {
         System.out.println("Triangle height: " + triHeight);
     }
 
-    public void rotate(Point rotPoint) {
+    public void rotate(Point newPoint) {
+        //Used to store the amount that the new point is offset by.
+        double offsetX = 0;
+        double offsetY = 0;
 
+        //The length of the line between the old point and the new point.
+        double offsetLength = 0;
+
+        offsetX = newPoint.x - coords[0][0];
+        offsetY = newPoint.y - coords[0][1];
+
+        offsetLength = Math.pow(offsetX, 2);
+        offsetLength += Math.pow(offsetY, 2);
+        offsetLength = Math.sqrt(offsetLength);
+
+        //Find the new height of the triangle;
+        double newTriHeight = Math.pow((offsetX - coords[0][0]) + tempOrigin.x, 2);
+        newTriHeight += Math.pow((offsetY - coords[0][1]) + tempOrigin.y, 2);
+        newTriHeight = Math.sqrt(newTriHeight);
+
+        /* Find angle between old point and new point around the origin
+           using the cos law. */
+        double rotAngle = Math.pow(offsetLength, 2);
+        rotAngle -= Math.pow(triHeight, 2);
+        rotAngle -= Math.pow(newTriHeight, 2);
+        rotAngle /= (-2) * triHeight * newTriHeight;
+        rotAngle = Math.acos(rotAngle);
+
+        System.out.println("New tri height: " + newTriHeight);
+        System.out.println("Rot around origin: " + Math.toDegrees(rotAngle));
+
+        //Initialize and declare rotation matrix using angle found.
+        double[][] rotMatrix = new double[2][2];
+        rotMatrix[0][0] = Math.cos(rotAngle);
+        rotMatrix[0][1] = -(Math.sin(rotAngle));
+        rotMatrix[1][0] = Math.sin(rotAngle);
+        rotMatrix[1][1] = Math.cos(rotAngle);
+
+        /* Multiply remaining the two vertices with rotation matrix
+        (The first vertex is excluded because it's position is already
+        tied to the mouse position.) */
+
+        //First vertex.
+        double newXCoord = rotMatrix[0][0] * coords[1][0];
+        newXCoord += (rotMatrix[0][1] * coords[1][1]);
+
+        double newYCoord = rotMatrix[1][0] * coords[1][0];
+        newYCoord += (rotMatrix[1][1] * coords[1][1]);
+
+        coords[1][0] = (int) newXCoord;
+        coords[1][1] = (int) newYCoord;
+
+        //Second vertex.
+        newXCoord = rotMatrix[0][0] * coords[2][0];
+        newXCoord += (rotMatrix[0][1] * coords[2][1]);
+
+        newYCoord = rotMatrix[1][0] * coords[2][0];
+        newYCoord += (rotMatrix[1][1] * coords[2][1]);
+
+        coords[2][0] = (int) newXCoord;
+        coords[2][1] = (int) newYCoord;
     }
 }

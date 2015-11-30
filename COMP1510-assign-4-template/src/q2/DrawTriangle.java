@@ -90,6 +90,7 @@ public class DrawTriangle extends JFrame {
 
         public void mouseDragged(MouseEvent e) {
             System.out.println("Mouse dragged called");
+            //triangle.rotate(e.getPoint());
             triangle.scale(e.getPoint());
             repaint();
         }
