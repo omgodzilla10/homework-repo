@@ -59,18 +59,6 @@ public class DrawTriangle extends JFrame {
                 triangle.draw(g);
             }
             
-            /** <h2>Finding center position</h2>
-            double length = Math.pow(tPoints[0][0] - tPoints[2][0], 2);
-            length += Math.pow(tPoints[0][1] - tPoints[2][1], 2);
-            length = Math.sqrt(length);
-            
-            double height;
-            height = (Math.pow(length, 2) - (Math.pow(length / 2, 2)));
-            height = Math.sqrt(height);
-            
-            g.setColor(Color.CYAN);
-            g.fillRect((int) length / 2, (int)height / 2, 10, 10);  */
-            
             // DRAWING CODE HERE
             System.out.println("Paint called");
         }
@@ -89,8 +77,8 @@ public class DrawTriangle extends JFrame {
         }
 
         public void mouseDragged(MouseEvent e) {
-            triangle.rotate(e.getPoint());
             triangle.scale(e.getPoint());
+            triangle.rotate(e.getPoint());
             repaint();
         }
 
