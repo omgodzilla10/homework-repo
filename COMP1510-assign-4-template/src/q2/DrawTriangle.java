@@ -1,8 +1,6 @@
 package q2;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -21,14 +19,18 @@ import javax.swing.JPanel;
  */
 public class DrawTriangle extends JFrame {
 
-    /**
-     *  The constructor method.
-     */
+    /** The width of the window. */
+    static final int WINDOW_WIDTH = 400;
+
+    /** The height of the window. */
+    static final int WINDOW_HEIGHT = 400;
+
+    /** The constructor method. */
     public DrawTriangle() {
         super("Trevor Hoefsloot");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setContentPane(new DrawTrianglePanel());
-        setSize(400, 400); // you can change this size but don't make it HUGE!
+        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setVisible(true);
     }
 
@@ -40,65 +42,82 @@ public class DrawTriangle extends JFrame {
     private class DrawTrianglePanel extends JPanel implements MouseListener,
             MouseMotionListener {
         
-        /** The triangle object */
+        /** The triangle object. */
         private Triangle triangle;
 
-        /** The constructor method.
-         */
-        public DrawTrianglePanel() {
+        /** The constructor method. */
+        DrawTrianglePanel() {
             addMouseListener(this);
             addMouseMotionListener(this);
         }
 
-        /**
-         * Handles the drawing onto the screen.
-         */
+        /** Handles the drawing onto the screen.
+         * @param g the Graphics component.
+         * */
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-            if(triangle != null) {
+            if (triangle != null) {
                 triangle.draw(g);
             }
-            
-            // DRAWING CODE HERE
-            System.out.println("Paint called");
         }
 
+        /** Called when the mouse is pressed.
+         * @param e A MouseEvent object, contains info regarding
+     *          the mouse click event.
+         * */
         public void mousePressed(MouseEvent e) {
-            System.out.println("Mouse pressed called");
             triangle = new Triangle(e.getPoint());
             repaint();
             
         }
 
+        /** Called when the mouse is released.
+         * @param e A MouseEvent object, contains info regarding
+     *          the mouse click event.
+         */
         public void mouseReleased(MouseEvent e) {
-            System.out.println("Mouse released called");
             triangle = null;
             repaint();
         }
 
+        /** Called when the mouse is dragged.
+         * @param e A A MouseEvent object, contains info regarding
+     *          the mouse click event.
+         */
         public void mouseDragged(MouseEvent e) {
-            triangle.scale(e.getPoint());
-            triangle.rotate(e.getPoint());
+            triangle.transform(e.getPoint());
             repaint();
         }
 
-        public void mouseEntered(MouseEvent e) {
-        }
+        /** Unused method.
+         * @param e A MouseEvent object, contains info regarding
+     *          the mouse click event.
+         * */
+        public void mouseEntered(MouseEvent e) { }
 
-        public void mouseExited(MouseEvent e) {
-        }
+        /** Unused method.
+         * @param e A MouseEvent object, contains info regarding
+     *          the mouse click event.
+         * */
+        public void mouseExited(MouseEvent e) { }
 
-        public void mouseClicked(MouseEvent e) {
-        }
+        /** Unused method.
+         * @param e A MouseEvent object, contains info regarding
+     *          the mouse click event.
+         * */
+        public void mouseClicked(MouseEvent e) { }
 
-        public void mouseMoved(MouseEvent e) {
-        }
+        /** Unused method.
+         * @param e A MouseEvent object, contains info regarding
+     *          the mouse click event.
+         * */
+        public void mouseMoved(MouseEvent e) { }
 
     }
 
-    /**
-     *
-     */
+    /** This is the main method that is called by the JVM.
+     * @param args command line arguments.
+     * */
     public static void main(String[] args) {
         new DrawTriangle();
     }

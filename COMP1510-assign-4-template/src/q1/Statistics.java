@@ -122,8 +122,7 @@ public class Statistics {
      * This is the main method (entry point) that gets called by the JVM.
      * </p>
      *
-     * @param args
-     *            command line arguments.
+     * @param args command line arguments.
      */
     public static void main(String[] args) {
         Statistics stats = new Statistics();
@@ -131,6 +130,6 @@ public class Statistics {
         stats.scanData();
         stats.printStandardDeviation();
 
-        System.out.println("Question one was called and ran sucessfully.");
+        System.out.println("Question one was called and ran successfully.");
     }
 };
