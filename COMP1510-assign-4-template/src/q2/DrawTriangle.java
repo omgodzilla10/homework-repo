@@ -81,7 +81,7 @@ public class DrawTriangle extends JFrame {
         }
 
         /** Called when the mouse is dragged.
-         * @param e A A MouseEvent object, contains info regarding
+         * @param e A MouseEvent object, contains info regarding
      *          the mouse click event.
          */
         public void mouseDragged(MouseEvent e) {
@@ -91,7 +91,7 @@ public class DrawTriangle extends JFrame {
 
         /** Unused method.
          * @param e A MouseEvent object, contains info regarding
-     *          the mouse click event.
+     *           the mouse click event.
          * */
         public void mouseEntered(MouseEvent e) { }
 
