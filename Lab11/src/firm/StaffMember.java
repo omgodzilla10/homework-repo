@@ -1,7 +1,10 @@
 package firm;
 
 abstract public class StaffMember {
-    protected String name; protected String address; protected String phone;
+    protected String name;
+    protected String address;
+    protected String phone;
+
     public StaffMember (String eName, String eAddress, String ePhone) {
         name = eName; address = eAddress; phone = ePhone;
     }
