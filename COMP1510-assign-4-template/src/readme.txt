@@ -1,22 +1,19 @@
-[Student Name], [Student ID], [Set], [Date]
+Trevor Hoefsloot, A00957323, 1E, Dec 2nd 2015
 
-This assignment is [enter percent]% complete.
+This assignment is 100% complete.
 
 
 ------------------------
 Question one (Statistics) status:
 
-[complete or not complete]
-[explanation if not complete, what is working/not working]
+Complete
 
 ------------------------
 Question two (DrawTriangle) status:
 
-[complete or not complete]
-[explanation if not complete, what is working/not working]
+Complete
 
 ------------------------
 Question three (StopWatch) status:
 
-[complete or not complete]
-[explanation if not complete, what is working/not working]
+Complete

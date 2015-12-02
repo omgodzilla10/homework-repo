@@ -8,11 +8,11 @@
   -->
 <project name="COMP 1510 Assignment 4" default="clean" basedir=".">
 
-  <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties" 
+  <taskdef resource="com/puppycrawl/tools/checkstyle/ant/checkstyle-ant-task.properties"
      classpath="lib/checkstyle-6.10-all.jar"/>
 
   <!-- REPLACE THIS NAME WITH YOUR OWN -->
-  <property name="studentName" value="Bloggs,Fred"/>
+  <property name="studentName" value="Hoefsloot,Trevor"/>
 
   <property name="build" location="build"/>
   <property name="dist" location="dist"/>
