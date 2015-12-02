@@ -63,7 +63,7 @@ public class DrawTriangle extends JFrame {
 
         /** Called when the mouse is pressed.
          * @param e A MouseEvent object, contains info regarding
-     *          the mouse click event.
+         *          the mouse click event.
          * */
         public void mousePressed(MouseEvent e) {
             triangle = new Triangle(e.getPoint());
@@ -73,7 +73,7 @@ public class DrawTriangle extends JFrame {
 
         /** Called when the mouse is released.
          * @param e A MouseEvent object, contains info regarding
-     *          the mouse click event.
+         *          the mouse click event.
          */
         public void mouseReleased(MouseEvent e) {
             triangle = null;
@@ -82,7 +82,7 @@ public class DrawTriangle extends JFrame {
 
         /** Called when the mouse is dragged.
          * @param e A MouseEvent object, contains info regarding
-     *          the mouse click event.
+         *          the mouse click event.
          */
         public void mouseDragged(MouseEvent e) {
             triangle.transform(e.getPoint());
@@ -91,25 +91,25 @@ public class DrawTriangle extends JFrame {
 
         /** Unused method.
          * @param e A MouseEvent object, contains info regarding
-     *           the mouse click event.
+         *           the mouse click event.
          * */
         public void mouseEntered(MouseEvent e) { }
 
         /** Unused method.
          * @param e A MouseEvent object, contains info regarding
-     *          the mouse click event.
+         *          the mouse click event.
          * */
         public void mouseExited(MouseEvent e) { }
 
         /** Unused method.
          * @param e A MouseEvent object, contains info regarding
-     *          the mouse click event.
+         *          the mouse click event.
          * */
         public void mouseClicked(MouseEvent e) { }
 
         /** Unused method.
          * @param e A MouseEvent object, contains info regarding
-     *          the mouse click event.
+         *          the mouse click event.
          * */
         public void mouseMoved(MouseEvent e) { }
 
