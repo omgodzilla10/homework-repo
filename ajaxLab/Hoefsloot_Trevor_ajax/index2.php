@@ -10,7 +10,8 @@
         <meta charset="utf-8" />
         <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
         <link rel="stylesheet" href="css/canada.css" type="text/css" />
-         <script type="text/javascript"  src="rawAjax.js"></script> 
+        <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.js"></script>
+        <script type="text/javascript" src="jQueryAjax.js"></script> 
     </head>
 
     <body>
@@ -22,7 +23,7 @@
                 <div class="form-group">
                     <label for="provSelect" class="control-label col-sm-4">Provinces: </label>
                     <div class="col-sm-4">
-                        <select id="provSelect" name="provSelect" onchange="getCitiesFromProvince()" >
+                        <select id="provSelect" name="provSelect">
                             <?php
                           $aProv = "";
                           foreach ($myArray as $provCity) {
