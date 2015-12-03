@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="COMP1510-assign-4-template/src"/>
+	<classpathentry kind="src" path="Lab11/src"/>
+	<classpathentry kind="lib" path="COMP1510-assign-4-template/dist/q1.jar"/>
+	<classpathentry kind="lib" path="COMP1510-assign-4-template/dist/q2.jar"/>
+	<classpathentry kind="lib" path="COMP1510-assign-4-template/dist/q3.jar"/>
+	<classpathentry kind="lib" path="COMP1510-assign-4-template/lib/checkstyle-6.10-all.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="COMP1510-assign-4-template/bin"/>
+</classpath>
