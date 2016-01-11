@@ -10,7 +10,7 @@
         <meta charset="utf-8" />
         <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
         <link rel="stylesheet" href="css/canada.css" type="text/css" />
-         <script type="text/javascript"  src="rawAjax.js"></script> 
+         <script type="text/javascript"  src="rawAjax.js"></script>
     </head>
 
     <body>
@@ -58,10 +58,10 @@
                           }
                         ?>
                         </select>
+                        <div id="animation"></div>
                     </div>
                     <div class="col-sm-4"></div>
                 </div>
-                <div id="animation"></div>
             </form>
         </div>
     </body>

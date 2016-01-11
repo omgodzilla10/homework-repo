@@ -12,6 +12,6 @@ public class Cylinder extends Shape {
     }
 
     public double area() {
-        return (4 * Math.PI * Math.pow(radius, 2)) * height;
+        return (2 * Math.PI * Math.pow(radius, 2)) + (height * Math.PI * radius * 2);
     }
 }

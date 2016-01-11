@@ -11,7 +11,7 @@
         <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
         <link rel="stylesheet" href="css/canada.css" type="text/css" />
         <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.js"></script>
-        <script type="text/javascript" src="jQueryAjax.js"></script> 
+        <script type="text/javascript" src="jQueryAjax.js"></script>
     </head>
 
     <body>
@@ -59,10 +59,10 @@
                           }
                         ?>
                         </select>
+                        <div id="animation"></div>
                     </div>
                     <div class="col-sm-4"></div>
                 </div>
-                <div id="animation"></div>
             </form>
         </div>
     </body>
