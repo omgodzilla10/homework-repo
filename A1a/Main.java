@@ -10,9 +10,28 @@ public class Main {
   }
 
   public void add(final String name){
-   }
+      //Create a temporary database
+      String[] tempDatabase = database;
+      
+      //Create a new database that is one index larger
+      database = new String[database.length + 1];
+      
+      //Place all of the old contacts into the new array
+      for(int i = 0; i < tempDatabase.length; i++) {
+          database[i] = tempDatabase[i];
+      }
+  }
 
   public int search(final String name){
+      //Go through each contact in the database
+      for(int i = 0; i < database.length; i++) {
+          if(database[i].contains(name)) {
+              return i;
+          }
+      }
+      
+      //Return -1 if the name was not found.
+      return -1;
   }
 
   public void displayAll(){
@@ -66,6 +85,8 @@ public class Main {
     add(name +" "+ phone);
   }
   
+  
+  
   public void deletePerson(){
     String name="";
       try{
@@ -93,6 +114,9 @@ public class Main {
       System.out.println("No such person");
     }
   }
+  
+ 
+  
   public void run(){
     int choice=0;
     do {
