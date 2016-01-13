@@ -1,5 +1,11 @@
 import java.util.Scanner;
 
+/**
+ * This class allows a user to add, remove, view, and search for contacts
+ * in an address book.
+ * 
+ * @author Trevor Hoefsloot
+ */
 public class Main {
   /**
    * A 2-Dimensional array that holds the name and phone number for each
@@ -37,9 +43,11 @@ public class Main {
 
   /** Searches the database for the specified name. */
   public int search(String name) {
+    name = name.toLowerCase();
+    
     // Go through each contact in the database
     for (int i = 0; i < database.length; i++) {
-      if (database[i][0].equals(name)) {
+      if (database[i][0].toLowerCase().equals(name)) {
         return i;
       }
     }
@@ -87,6 +95,8 @@ public class Main {
       try {
         choice = input.nextInt();
       } catch (Exception e) {
+        throw new IllegalArgumentException("Invalid input! Please enter an "
+            + "integer.");
       }
       if (choice > 0 && choice <= 5) {
         done = true;
@@ -108,6 +118,7 @@ public class Main {
       phone = input.next();
       System.out.println("");
     } catch (Exception e) {
+      throw new IllegalArgumentException("Invalid input!");
     }
     add(name, phone);
   }
@@ -120,6 +131,7 @@ public class Main {
       name = input.next();
       System.out.println("");
     } catch (Exception e) {
+      throw new IllegalArgumentException("Invalid input!");
     }
     if (!remove(name)) {
       System.out.println("Could not delete " + name);
@@ -138,6 +150,7 @@ public class Main {
       name = input.next();
       System.out.println("");
     } catch (Exception e) {
+      throw new IllegalArgumentException("Invalid input!");
     }
     int pos = search(name);
     if (pos >= 0) {
