@@ -2,11 +2,11 @@ import java.util.Scanner;
 
 /**
  * This class allows a user to add, remove, view, and search for contacts
- * in an address book.
+ * in a database.
  * 
  * @author Trevor Hoefsloot
  */
-public class Main {
+public class ContactBook {
   /**
    * A 2-Dimensional array that holds the name and phone number for each
    * contact.
@@ -17,12 +17,16 @@ public class Main {
   private Scanner input;
 
   /** The class's main constructor method. */
-  public Main() {
+  public ContactBook() {
     database = new String[0][2];
     input = new Scanner(System.in);
   }
 
-  /** Adds a new contact to the database. */
+  /** Adds a new contact to the database. 
+   * 
+   * @param name - The new contact's name
+   * @param number - The new contact's phone number
+   * */
   public void add(final String name, final String number) {
     // Create a temporary database
     String[][] tempDatabase = database;
@@ -41,7 +45,11 @@ public class Main {
     database[database.length - 1][1] = number;
   }
 
-  /** Searches the database for the specified name. */
+  /** Searches the database for the specified name. 
+   * 
+   * @param name - The name to search for within the database.
+   * @return - The index of the name found in the database.
+   * */
   public int search(String name) {
     name = name.toLowerCase();
     
@@ -64,7 +72,11 @@ public class Main {
     }
   }
 
-  /** Removes a contact from the database. */
+  /** Removes a contact from the database. 
+   * 
+   * @param name - The name to remove from the database
+   * @return - Whether the name was found and removed or not
+   * */
   public boolean remove(final String name) {
     int pos = search(name);
     if (pos >= 0) {
@@ -86,7 +98,9 @@ public class Main {
     System.out.println("5) Exit\n");
   }
 
-  /** Finds the user's selected choice for the menu. */
+  /** Finds the user's selected choice for the menu. 
+   * return - The user's selected option
+   * */
   public int getChoice() {
     int choice = 4;// default
     boolean done = false;
@@ -189,6 +203,6 @@ public class Main {
 
   /** The main method, called on program execution. */
   public static void main(String[] args) {
-    new Main().run();
+    new ContactBook().run();
   }
 }
