@@ -6,7 +6,7 @@ import java.util.Scanner;
  * 
  * @author Trevor Hoefsloot
  */
-public class ContactBook {
+public class Hoefsloot_Trevor_ContactBook {
   /**
    * A 2-Dimensional array that holds the name and phone number for each
    * contact.
@@ -17,7 +17,7 @@ public class ContactBook {
   private Scanner input;
 
   /** The class's main constructor method. */
-  public ContactBook() {
+  public Hoefsloot_Trevor_ContactBook() {
     database = new String[0][2];
     input = new Scanner(System.in);
   }
@@ -203,6 +203,6 @@ public class ContactBook {
 
   /** The main method, called on program execution. */
   public static void main(String[] args) {
-    new ContactBook().run();
+    new Hoefsloot_Trevor_ContactBook().run();
   }
 }
