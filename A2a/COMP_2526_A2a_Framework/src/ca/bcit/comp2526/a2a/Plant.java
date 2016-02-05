@@ -1,6 +1,7 @@
 package ca.bcit.comp2526.a2a;
 
 import java.awt.Color;
+import java.awt.Point;
 
 public class Plant extends Cell {
   public void init() {
@@ -8,7 +9,7 @@ public class Plant extends Cell {
     repaint();
   }
   
-  public void setCell(int row, int col) {
-    super.setCell(row, col);
+  public void setCell(Point p) {
+    super.setCell(p);
   }
 }

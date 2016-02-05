@@ -8,67 +8,66 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 /**
  * The parent class of all cells.
+ * 
  * @author Trevor Hoefsloot
  * @version 1.0.0
  */
 
-public class Cell extends JComponent {
+public class Cell extends JPanel {
   private static final long serialVersionUID = 1L;
-  private int xCoord;
-  private int yCoord;
-
+  private Point position;
+  
+  /**
+   * The main constructor method.
+   */
+  public Cell() {
+    position = new Point();
+  }
+  
+  /**
+   * Initializes the cell and sets its color.
+   */
   public void init() {
-    setBounds(new Rectangle(50, 50, 50, 50));
     setBackground(Color.WHITE);
+  }
+  
+  /**
+   * Sets a new position for the cell on the grid.
+   * 
+   * @param p the new position
+   */
+  public void setCell(Point p) {
+    position = p;
     repaint();
   }
-  
-  public void setCell(int row, int col) {
-    xCoord = row;
-    yCoord = col;
-  }
-  
-  public void move() {}
   
   /**
    * Returns the coordinates of the cell.
    */
   public Point getLocation() {
-    return new Point(xCoord, yCoord);
+    return position;
   }
 
   /**
-   * Returns the four adjacent cells to this one, or null if no
-   * adjacent cell is present.
+   * Returns every adjacent cell in an array.
    * 
-   * @return an arrayCoord of all adjacent cells
+   * @return an array of all adjacent cells
    */
   public Cell[] getAdjacentCells() {
-    Cell[] adjCells; //The arrayCoord to return
-    int idxCoord = 0; //Used when filling in the arrayCoord with adjacent cells.
-
-    if ((xCoord == 0 && yCoord == 0) || (xCoord == World.getColumnCount() && yCoord == 0)
-        || (xCoord == 0 && yCoord == World.getRowCount())
-        || (xCoord == World.getColumnCount() && yCoord == World.getRowCount())) {
-      adjCells = new Cell[3];
-    }
-
-    else if (xCoord == 0 || yCoord == 0 || xCoord == World.getColumnCount()
-        || yCoord == World.getRowCount()) {
-      adjCells = new Cell[5];
-    }
-
-    else {
-      adjCells = new Cell[8];
-    }
-
+    Cell[] adjCells;
+    int idx = 0; //Used when filling in the array with adjacent cells.
+    
+    adjCells = new Cell[findAdjacentCells()];
+    
     for (int row = -1; row <= 1; row++) {
       for (int col = -1; col <= 1; col++) {
-        if(row != 0 && col != 0 && xCoord + col >= 0 && yCoord + row >= 0) {
-          adjCells[idxCoord++] = World.getCellAt(row, col);
+        if (!(row == 0 && col == 0) && position.x + col >= 0 && position.x + col <= World.getColumnCount()
+              && position.y + row >= 0 && position.y + col <= World.getRowCount()) {
+          adjCells[idx++] = World.getCellAt(row, col);
         }
       }
     }
@@ -76,9 +75,51 @@ public class Cell extends JComponent {
     return adjCells;
   }
   
-  public void paintComponent(Graphics g) {
-    Dimension size = getSize();
-    super.paintComponent(g);
-    g.setColor(Color.GREEN);
+  /**
+   * Returns the number of cells adjacent to this cell.
+   * 
+   * @return the number of adjacent cells
+   */
+  private int findAdjacentCells() {
+    int numAdjacent;
+    
+    //Checks to see if the cell is on the corner of the grid.
+    if ((position.x == 0 && position.y == 0) || (position.x == World.getColumnCount() && position.y == 0)
+        || (position.x == 0 && position.y == World.getRowCount())
+        || (position.x == World.getColumnCount() && position.y == World.getRowCount())) {
+      numAdjacent = 3;
+    }
+    
+    //Checks to see if the cell is on the wall of the grid.
+    else if (position.x == 0 || position.y == 0 || position.x == World.getColumnCount()
+        || position.y == World.getRowCount()) {
+      numAdjacent = 5;
+    }
+    
+    //Only reached if the cell is not touching a wall or corner.
+    else {
+      numAdjacent = 8;
+    }
+    
+    return numAdjacent;
   }
+  
+  /**
+   * Swaps the position of this cell with another.
+   * 
+   * @param cell The cell to swap with
+   */
+  public void swapCells(Cell cell) {
+    Cell tempCell;
+    tempCell = this;
+    
+    setCell(cell.getLocation());
+    cell.setCell(tempCell.getLocation());
+  }
+  
+  /**
+   * The primary move method for each cell.
+   * Left blank because not every cell needs to move.
+   */
+  public void move() {}
 }
