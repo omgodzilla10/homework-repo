@@ -1,13 +1,7 @@
 package ca.bcit.comp2526.a2a;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Rectangle;
-
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 /**
@@ -18,7 +12,10 @@ import javax.swing.JPanel;
  */
 
 public class Cell extends JPanel {
+  /** The serial version ID. */
   private static final long serialVersionUID = 1L;
+  
+  /** The current position of the cell on the grid. */
   private Point position;
   
   /**
@@ -40,9 +37,8 @@ public class Cell extends JPanel {
    * 
    * @param p the new position
    */
-  public void setCell(Point p) {
-    position = p;
-    repaint();
+  public void setCell(Point point) {
+    position = point;
   }
   
   /**
@@ -65,9 +61,10 @@ public class Cell extends JPanel {
     
     for (int row = -1; row <= 1; row++) {
       for (int col = -1; col <= 1; col++) {
-        if (!(row == 0 && col == 0) && position.x + col >= 0 && position.x + col <= World.getColumnCount()
-              && position.y + row >= 0 && position.y + col <= World.getRowCount()) {
-          adjCells[idx++] = World.getCellAt(row, col);
+        if (!(row == 0 && col == 0) && position.x + col >= 0 
+            && position.x + col < World.getColumnCount()
+              && position.y + row >= 0 && position.y + col < World.getRowCount()) {
+          adjCells[idx++] = World.getCellAt(position.y + row, position.x + col);
         }
       }
     }
@@ -84,20 +81,17 @@ public class Cell extends JPanel {
     int numAdjacent;
     
     //Checks to see if the cell is on the corner of the grid.
-    if ((position.x == 0 && position.y == 0) || (position.x == World.getColumnCount() && position.y == 0)
-        || (position.x == 0 && position.y == World.getRowCount())
-        || (position.x == World.getColumnCount() && position.y == World.getRowCount())) {
+    if ((position.x == 0 && position.y == 0) 
+        || (position.x == World.getColumnCount() - 1 && position.y == 0)
+        || (position.x == 0 && position.y == World.getRowCount() - 1)
+        || (position.x == World.getColumnCount() - 1 && position.y == World.getRowCount() - 1)) {
       numAdjacent = 3;
-    }
-    
-    //Checks to see if the cell is on the wall of the grid.
-    else if (position.x == 0 || position.y == 0 || position.x == World.getColumnCount()
-        || position.y == World.getRowCount()) {
+    } else if (position.x == 0 || position.y == 0 || position.x == World.getColumnCount() - 1
+        || position.y == World.getRowCount() - 1) {
+      //Reached if cell is on the wall of the grid.
       numAdjacent = 5;
-    }
-    
-    //Only reached if the cell is not touching a wall or corner.
-    else {
+    } else {
+      //Reached if the cell is not on any wall of the grid.
       numAdjacent = 8;
     }
     
@@ -105,21 +99,24 @@ public class Cell extends JPanel {
   }
   
   /**
-   * Swaps the position of this cell with another.
+   * Returns whether or not this cell is edible.
    * 
-   * @param cell The cell to swap with
+   * @return true if the cell is edible, else returns false.
    */
-  public void swapCells(Cell cell) {
-    Cell tempCell;
-    tempCell = this;
-    
-    setCell(cell.getLocation());
-    cell.setCell(tempCell.getLocation());
+  public boolean isEdible() {
+    return false;
   }
   
   /**
-   * The primary move method for each cell.
-   * Left blank because not every cell needs to move.
+   * Removes the cell.
    */
-  public void move() {}
+  public void remove() {
+    init();
+  }
+  
+  /**
+   * Called whenever a turn begins.
+   * Empty by default
+   */
+  public void takeTurn() {}
 }

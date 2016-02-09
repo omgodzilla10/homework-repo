@@ -10,91 +10,98 @@ import javax.swing.JFrame;
  * @author BCIT
  * @version 1.0
  */
-public final class Main
-{
-    private static final Toolkit TOOLKIT;
+public final class Main {
+  private static final Toolkit TOOLKIT;
 
-    static
-    {
-        TOOLKIT = Toolkit.getDefaultToolkit();
+  static {
+    TOOLKIT = Toolkit.getDefaultToolkit();
+  }
+
+  private Main() {
+  }
+
+  /**
+   * The main method.
+   * 
+   * @param argv passed in command-line arguments.
+   */
+  public static void main(final String[] argv) {
+    final GameFrame frame;
+    final World     world;
+
+    RandomGenerator.reset();
+    world = new World(25,
+        25);
+    world.init();
+    frame = new GameFrame(world);
+    position(frame);
+    frame.init();
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setVisible(true);
+  }
+
+  private static void position(final GameFrame frame) {
+    final Dimension size;
+
+    size = calculateScreenArea(0.80f,
+        0.80f);
+    frame.setSize(size);
+    frame.setLocation(centreOnScreen(size));
+  }
+  
+  /**
+   * Returns the center point of the screen, given the screen's dimension.
+   * 
+   * @param size the screen's dimensions
+   * @return the center point of the screen.
+   */
+  public static Point centreOnScreen(final Dimension size) {
+    final Dimension screenSize;
+
+    if (size == null) {
+      throw new IllegalArgumentException("Size cannot be null");
     }
 
-    private Main()
-    {
+    screenSize = TOOLKIT.getScreenSize();
+
+    return (new Point((screenSize.width - size.width) / 2,
+        (screenSize.height - size.height) / 2));
+  }
+  
+  /**
+   * Calculates the screen's area, given the height
+   * and width percentages used by the frame.
+   * 
+   * @param widthPercent the frame's width percentage
+   * @param heightPercent the frame's height percentage
+   * @return the screen area used by the frame.
+   */
+  public static Dimension calculateScreenArea(final float widthPercent,
+      final float heightPercent) {
+    final Dimension screenSize;
+    final Dimension area;
+    final int       width;
+    final int       height;
+    final int       size;
+
+    if ((widthPercent <= 0.0f) || (widthPercent > 100.0f)) {
+      throw new IllegalArgumentException("widthPercent cannot be " 
+          + "<= 0 or > 100 - got: " + widthPercent);
     }
 
-    public static void main(final String[] argv)
-    {
-        final GameFrame frame;
-        final World     world;
-
-        RandomGenerator.reset();
-        world = new World(25,
-                          25);
-        world.init();
-        frame = new GameFrame(world);
-        position(frame);
-        frame.init();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+    if ((heightPercent <= 0.0f) || (heightPercent > 100.0f)) {
+      throw new IllegalArgumentException("heightPercent cannot be " 
+          + "<= 0 or > 100 - got: " + heightPercent);
     }
 
-    private static void position(final GameFrame frame)
-    {
-        final Dimension size;
+    screenSize = TOOLKIT.getScreenSize();
+    width      = (int)(screenSize.width * widthPercent);
+    height     = (int)(screenSize.height * heightPercent);
+    size       = Math.min(width,
+        height);
+    area       = new Dimension(size,
+        size);
 
-        size = calculateScreenArea(0.80f,
-                                   0.80f);
-        frame.setSize(size);
-        frame.setLocation(centreOnScreen(size));
-    }
-
-    public static Point centreOnScreen(final Dimension size)
-    {
-        final Dimension screenSize;
-
-        if(size == null)
-        {
-            throw new IllegalArgumentException("Size cannot be null");
-        }
-
-        screenSize = TOOLKIT.getScreenSize();
-
-        return (new Point((screenSize.width - size.width) / 2,
-                          (screenSize.height - size.height) / 2));
-    }
-
-    public static Dimension calculateScreenArea(final float widthPercent,
-                                                final float heightPercent)
-    {
-        final Dimension screenSize;
-        final Dimension area;
-        final int       width;
-        final int       height;
-        final int       size;
-
-        if((widthPercent <= 0.0f) || (widthPercent > 100.0f))
-        {
-            throw new IllegalArgumentException("widthPercent cannot be " + 
-                                               "<= 0 or > 100 - got: " +
-                                               widthPercent);
-        }
-
-        if((heightPercent <= 0.0f) || (heightPercent > 100.0f))
-        {
-            throw new IllegalArgumentException("heightPercent cannot be " + 
-                                               "<= 0 or > 100 - got: " +
-                                               heightPercent);
-        }
-
-        screenSize = TOOLKIT.getScreenSize();
-        width      = (int)(screenSize.width * widthPercent);
-        height     = (int)(screenSize.height * heightPercent);
-        size       = Math.min(width,
-                              height);
-        area       = new Dimension(size,
-                                   size);
-
-        return (area);
-    }
+    return (area);
+  }
 }

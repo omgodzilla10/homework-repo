@@ -1,15 +1,17 @@
 package ca.bcit.comp2526.a2a;
 
 import java.awt.Dimension;
+import java.awt.Point;
 
 /**
  * The world grid in which the simulation takes place.
+ * 
  * @author Trevor Hoefsloot
  * @version 1.0.0
  */
 
 public class World {
-  /** The chance that a plant will spawn on a cell */
+  /** The chance that a plant will spawn on a cell. */
   static final int plantChance = 30;
 
   /** The chance that an herbivore will spawn on a cell. */
@@ -19,7 +21,7 @@ public class World {
   private static Dimension gridSize;
 
   /** A 2-dimensional array containing every cell on the board. */
-  private static Cell cellArray[][];
+  private static Cell[][] cellArray;
 
   private enum CellType {
     Plant,
@@ -34,16 +36,28 @@ public class World {
      * @return a random CellType
      */
     public static CellType getRandomCell(int rand) {
-      if(rand < plantChance) {
+      if (rand < plantChance) {
         return Plant;
-      }
-
-      else if(rand < plantChance + herbivoreChance) {
+      } else if (rand < plantChance + herbivoreChance) {
         return Herbivore;
-      }
-
-      else {
+      } else {
         return Empty;
+      }
+    }
+    
+    /**
+     * Returns a new Cell object according to the passed in
+     * CellType.
+     * 
+     * @param cell the type of cell to initialize and return
+     * @return the new cell
+     */
+    public static Cell getNewCell(CellType cell) {
+      switch (cell) {
+        case Plant: return new Plant();
+        case Herbivore: return new Herbivore();
+        case Empty: return new Cell();
+        default: return new Cell();
       }
     }
   }
@@ -76,7 +90,7 @@ public class World {
       for (int col = 0; col < gridSize.width; col++) {
         fillCell(row, col);
         cellArray[row][col].init();
-        cellArray[row][col].repaint();
+        cellArray[row][col].setCell(new Point(col, row));
       }
     }
   }
@@ -87,7 +101,8 @@ public class World {
   public void takeTurn() {
     for (int row = 0; row < gridSize.height; row++) {
       for (int col = 0; col < gridSize.width; col++) {
-        cellArray[row][col].move();
+        cellArray[row][col].takeTurn();
+        cellArray[row][col].repaint();
       }
     }
   }
@@ -107,20 +122,7 @@ public class World {
     rand = RandomGenerator.nextNumber(100);
     newCell = CellType.getRandomCell(rand);
 
-    switch (newCell) {
-    case Plant:
-      cellArray[row][col] = new Plant();
-      break;
-    case Herbivore:
-      cellArray[row][col] = new Herbivore();
-      break;
-    case Empty:
-      cellArray[row][col] = new Cell();
-      break;
-    default:
-      cellArray[row][col] = new Cell();
-      break;
-    }
+    cellArray[row][col] = CellType.getNewCell(newCell);
   }
 
   /**
@@ -142,11 +144,20 @@ public class World {
   }
 
   /**
-   * Returns the cell at the specified location
+   * Returns the cell at the specified location.
    * 
-   * @return cell at specified location.
+   * @return cell at specified location
    */
   public static Cell getCellAt(int row, int col) {
     return cellArray[row][col];
+  }
+  
+  /**
+   * Returns the cell at the specified location.
+   * 
+   * @return cell at specified location
+   */
+  public static Cell getCellAt(Point point) {
+    return cellArray[(int) point.getY()][(int) point.getX()];
   }
 }
