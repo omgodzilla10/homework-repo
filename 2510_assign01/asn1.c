@@ -3,13 +3,17 @@
 #include <string.h>
 #include <ctype.h>
 
-#define LINESIZE 128
+#define LINESIZE 1024
 
 size_t prompt_user (void) {
 	int selection = 0;
 	char readSelection[LINESIZE] = "";
 	
-	printf("%s", "Enter an integer");
+	printf("\nMain Menu\n\n - To modify a student's records, enter a record number.");
+	printf("\n - Enter 0 to display all students");
+	printf("\n - Enter -1 to append to the record");
+	printf("\n - Enter -2 to exit the application\n");
+	
 	if(fgets(readSelection, LINESIZE, stdin)) {
 		sscanf(readSelection, "%d", &selection);
 		return selection;
@@ -20,8 +24,30 @@ size_t prompt_user (void) {
 }
 
 
-void append(char word[], size_t n) {
-	char entered_string[LINESIZE];
+void get_student_info(FILE *fp, const char prompt[], size_t n) {
+	char entered_string[n];
+	char word[n];
+	
+	while (1) {
+		printf("%s\n", prompt);
+		if(fgets(entered_string, n, stdin)) {
+			sscanf(entered_string, "%s", word);
+			printf("%s\n", word);
+		
+			if(word == EOF) {
+				break;
+			} else if(strlen(word) <= n) {
+				break;
+			}
+		} else {
+			clearerr(stdin);
+		}
+	}
+}
+
+void appendStudent(FILE *fp) {
+	char prompt[] = "Enter the student's information";
+	get_student_info(fp, prompt, LINESIZE);
 }
 
 void modify(size_t idx) {
@@ -32,21 +58,17 @@ void displayAll(FILE *fp) {
 	int c = 0;
 	while(!feof(fp)) {
 		c = fgetc(fp);
-		printf("%c", c);
+		printf("%d", c);
 	}
 }
 
 int main (int argc, char *argv[]) {
 	int user_response = 0;
-	char records_file[LINESIZE] = "";
 	FILE *fp;
 	
-	if(argc > 1) {
-		strcpy(argv[1], records_file);
-		printf("%s", records_file);
-		
+	if(argc == 2) {
 		/* Create the text file if it doesn't already exist. */
-		if((fp = fopen(records_file, "ab+")) == 0) {
+		if((fp = fopen(argv[1], "wb+")) == 0) {
 			perror("fopen failed");
 			return 0;
 		}
@@ -56,7 +78,7 @@ int main (int argc, char *argv[]) {
 			
 			switch (user_response) {
 				case -2: return 0;
-				case -1: append(records_file, LINESIZE);
+				case -1: appendStudent(fp);
 					break;
 				case 0: displayAll(fp);
 					break;
@@ -65,7 +87,7 @@ int main (int argc, char *argv[]) {
 			}
 		}
 	} else {
-		printf("%s", "Missing file name");
+		perror("Missing file name");
 	}
 	
 	fclose(fp);
