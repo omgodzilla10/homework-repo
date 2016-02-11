@@ -24,7 +24,7 @@ size_t prompt_user (void) {
 }
 
 
-void get_student_info(FILE *fp, const char prompt[], size_t n) {
+void append_student_info(FILE *fp, const char prompt[], size_t n) {
 	char entered_string[n];
 	char word[n];
 	
@@ -32,7 +32,6 @@ void get_student_info(FILE *fp, const char prompt[], size_t n) {
 		printf("%s\n", prompt);
 		if(fgets(entered_string, n, stdin)) {
 			sscanf(entered_string, "%s", word);
-			printf("%s\n", word);
 		
 			if(word == EOF) {
 				break;
@@ -43,11 +42,18 @@ void get_student_info(FILE *fp, const char prompt[], size_t n) {
 			clearerr(stdin);
 		}
 	}
+	
+	fprintf(fp, "%s", word);
 }
 
 void appendStudent(FILE *fp) {
-	char prompt[] = "Enter the student's information";
-	get_student_info(fp, prompt, LINESIZE);
+	char idPrompt[] = "Enter the student's ID";
+	char gradePrompt[] = "Enter the student's grade";
+	
+	append_student_info(fp, idPrompt, LINESIZE);
+	fprintf(fp, " ");
+	append_student_info(fp, gradePrompt, LINESIZE);
+	fprintf(fp, "\n");
 }
 
 void modify(size_t idx) {
@@ -55,10 +61,22 @@ void modify(size_t idx) {
 }
 
 void displayAll(FILE *fp) {
-	int c = 0;
-	while(!feof(fp)) {
-		c = fgetc(fp);
-		printf("%d", c);
+	char word[LINESIZE];
+	char entered_string[LINESIZE];
+	int row = 1;
+	int grade = 0;
+	fseek(fp, 0, SEEK_SET);
+	
+	while (fgets(entered_string, LINESIZE, fp) != NULL) {
+		sscanf(entered_string, "%s %d", word,&grade);
+		fprintf(stderr, "%d ", row++);
+		fprintf(stderr, "%s %d\n", word, grade);
+		
+		if(*word == EOF) {
+			break;
+		} else {
+			clearerr(stdin);
+		}
 	}
 }
 
@@ -73,7 +91,7 @@ int main (int argc, char *argv[]) {
 			return 0;
 		}
 		
-		while(user_response != -2 && user_response != EOF) {
+		while(user_response != -2) {
 			user_response = prompt_user();
 			
 			switch (user_response) {
@@ -83,7 +101,6 @@ int main (int argc, char *argv[]) {
 				case 0: displayAll(fp);
 					break;
 				default: modify(user_response);
-					break;
 			}
 		}
 	} else {
