@@ -25,19 +25,20 @@ size_t prompt_user (void) {
 
 
 void append_student_info(FILE *fp, const char prompt[], size_t n) {
-	char entered_string[n];
-	char word[n];
+	char entered_string[LINESIZE];
+	char word[LINESIZE];
 	
 	while (1) {
 		printf("%s\n", prompt);
-		if(fgets(entered_string, n, stdin)) {
+		if(fgets(entered_string, LINESIZE, stdin)) {
 			sscanf(entered_string, "%s", word);
-		
-			if(word == EOF) {
-				break;
-			} else if(strlen(word) <= n) {
-				break;
+			
+			if(strlen(word) < n || strlen(word) > n) {
+				printf("\n%s%d%s\n", "Line must contain ", n, " characters.");
+				continue;
 			}
+			
+			break;
 		} else {
 			clearerr(stdin);
 		}
@@ -50,14 +51,13 @@ void appendStudent(FILE *fp) {
 	char idPrompt[] = "Enter the student's ID";
 	char gradePrompt[] = "Enter the student's grade";
 	
-	append_student_info(fp, idPrompt, LINESIZE);
+	append_student_info(fp, idPrompt, 9);
 	fprintf(fp, " ");
-	append_student_info(fp, gradePrompt, LINESIZE);
+	append_student_info(fp, gradePrompt, 3);
 	fprintf(fp, "\n");
 }
 
 void modify(size_t idx) {
-	
 }
 
 void displayAll(FILE *fp) {
