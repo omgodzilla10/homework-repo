@@ -1,0 +1,14 @@
+-1   
+  a11111111
+25
+-1
+  a22222222
+ -1          # abort input
+-1           # append
+  -1         # abort input
+0            # display
+-1           # append
+a33333333
+60
+0            # display
+-2
