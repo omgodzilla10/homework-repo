@@ -18,6 +18,9 @@ public class Cell extends JPanel {
   /** The current position of the cell on the grid. */
   private Point position;
   
+  /** The world object. */
+  private World world;
+  
   /**
    * The main constructor method.
    */
@@ -27,9 +30,13 @@ public class Cell extends JPanel {
   
   /**
    * Initializes the cell and sets its color.
+   * 
+   * @param world a reference to the main world class
    */
-  public void init() {
+  public void init(World world) {
     setBackground(Color.WHITE);
+    this.world = world;
+    repaint();
   }
   
   /**
@@ -54,48 +61,7 @@ public class Cell extends JPanel {
    * @return an array of all adjacent cells
    */
   public Cell[] getAdjacentCells() {
-    Cell[] adjCells;
-    int idx = 0; //Used when filling in the array with adjacent cells.
-    
-    adjCells = new Cell[findAdjacentCells()];
-    
-    for (int row = -1; row <= 1; row++) {
-      for (int col = -1; col <= 1; col++) {
-        if (!(row == 0 && col == 0) && position.x + col >= 0 
-            && position.x + col < World.getColumnCount()
-              && position.y + row >= 0 && position.y + col < World.getRowCount()) {
-          adjCells[idx++] = World.getCellAt(position.y + row, position.x + col);
-        }
-      }
-    }
-    
-    return adjCells;
-  }
-  
-  /**
-   * Returns the number of cells adjacent to this cell.
-   * 
-   * @return the number of adjacent cells
-   */
-  private int findAdjacentCells() {
-    int numAdjacent;
-    
-    //Checks to see if the cell is on the corner of the grid.
-    if ((position.x == 0 && position.y == 0) 
-        || (position.x == World.getColumnCount() - 1 && position.y == 0)
-        || (position.x == 0 && position.y == World.getRowCount() - 1)
-        || (position.x == World.getColumnCount() - 1 && position.y == World.getRowCount() - 1)) {
-      numAdjacent = 3;
-    } else if (position.x == 0 || position.y == 0 || position.x == World.getColumnCount() - 1
-        || position.y == World.getRowCount() - 1) {
-      //Reached if cell is on the wall of the grid.
-      numAdjacent = 5;
-    } else {
-      //Reached if the cell is not on any wall of the grid.
-      numAdjacent = 8;
-    }
-    
-    return numAdjacent;
+    return world.getAdjacentCells(this);
   }
   
   /**
@@ -108,10 +74,28 @@ public class Cell extends JPanel {
   }
   
   /**
+   * Returns the cell at the specified location.
+   * 
+   * @return the cell at the location
+   */
+  public Cell getCellAt(int row, int col) {
+    return world.getCellAt(row, col);
+  }
+  
+  /**
    * Removes the cell.
    */
   public void remove() {
-    init();
+    init(world);
+  }
+  
+  /**
+   * Sets the world reference for the cell.
+   * 
+   * @param world the new world reference
+   */
+  public void setWorld(World world) {
+    this.world = world;
   }
   
   /**

@@ -4,7 +4,7 @@ import java.awt.Point;
 
 public abstract class Animal extends Cell {
   private static final long serialVersionUID = 1L;
-
+  
   public void setCell(Point point) {
     super.setCell(point);
   }
@@ -28,7 +28,7 @@ public abstract class Animal extends Cell {
    * @param point the position to move to
    */
   public void move(Point point) {
-    if (World.getCellAt(point).isEdible()) {
+    if (getCellAt(point.y, point.x).isEdible()) {
       eat(point);
     }
     
@@ -36,7 +36,7 @@ public abstract class Animal extends Cell {
   }
   
   public void eat(Point point) {
-    Cell cell = World.getCellAt(point);
+    Cell cell = getCellAt(point.y, point.x);
     cell.remove();
   }
 }

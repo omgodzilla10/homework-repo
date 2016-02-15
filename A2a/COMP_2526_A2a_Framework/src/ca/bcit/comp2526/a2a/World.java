@@ -44,7 +44,7 @@ public class World {
         return Empty;
       }
     }
-    
+
     /**
      * Returns a new Cell object according to the passed in
      * CellType.
@@ -54,10 +54,10 @@ public class World {
      */
     public static Cell getNewCell(CellType cell) {
       switch (cell) {
-        case Plant: return new Plant();
-        case Herbivore: return new Herbivore();
-        case Empty: return new Cell();
-        default: return new Cell();
+      case Plant: return new Plant();
+      case Herbivore: return new Herbivore();
+      case Empty: return new Cell();
+      default: return new Cell();
       }
     }
   }
@@ -89,12 +89,12 @@ public class World {
     for (int row = 0; row < gridSize.height; row++) {
       for (int col = 0; col < gridSize.width; col++) {
         fillCell(row, col);
-        cellArray[row][col].init();
+        cellArray[row][col].init(this);
         cellArray[row][col].setCell(new Point(col, row));
       }
     }
   }
-  
+
   /**
    * Runs one turn of the simulation.
    */
@@ -130,7 +130,7 @@ public class World {
    * 
    * @return number of rows in the grid
    */
-  public static int getRowCount() {
+  public int getRowCount() {
     return gridSize.height;
   }
 
@@ -139,7 +139,7 @@ public class World {
    * 
    * @return number of columns in the grid
    */
-  public static int getColumnCount() {
+  public int getColumnCount() {
     return gridSize.width;
   }
 
@@ -148,16 +148,68 @@ public class World {
    * 
    * @return cell at specified location
    */
-  public static Cell getCellAt(int row, int col) {
+  public Cell getCellAt(int row, int col) {
     return cellArray[row][col];
   }
-  
+
   /**
    * Returns the cell at the specified location.
    * 
    * @return cell at specified location
    */
-  public static Cell getCellAt(Point point) {
+  public Cell getCellAt(Point point) {
     return cellArray[(int) point.getY()][(int) point.getX()];
+  }
+  
+  /**
+   * Returns every adjacent cell in an array.
+   * 
+   * @return an array of all adjacent cells
+   */
+  public Cell[] getAdjacentCells(Cell cell) {
+    Cell[] adjCells;
+    Point position = cell.getLocation();
+    int idx = 0; //Used when filling in the array with adjacent cells.
+
+    adjCells = new Cell[findAdjacentCells(cell)];
+
+    for (int row = -1; row <= 1; row++) {
+      for (int col = -1; col <= 1; col++) {
+        if ((row != 0 && col != 0) && position.x + col >= 0 
+            && position.x + col < getColumnCount()
+            && position.y + row >= 0 && position.y + row < getRowCount()) {
+          adjCells[idx++] = getCellAt(position.y + row, position.x + col);
+        }
+      }
+    }
+
+    return adjCells;
+  }
+  
+  /**
+   * Returns the number of cells adjacent to this cell.
+   * 
+   * @return the number of adjacent cells
+   */
+  private int findAdjacentCells(Cell cell) {
+    int numAdjacent;
+    Point position = cell.getLocation();
+
+    //Checks to see if the cell is on the corner of the grid.
+    if ((position.x == 0 && position.y == 0) 
+        || (position.x == getColumnCount() - 1 && position.y == 0)
+        || (position.x == 0 && position.y == getRowCount() - 1)
+        || (position.x == getColumnCount() - 1 && position.y == getRowCount() - 1)) {
+      numAdjacent = 3;
+    } else if (position.x == 0 || position.y == 0 || position.x == getColumnCount() - 1
+        || position.y == getRowCount() - 1) {
+      //Reached if cell is on the wall of the grid.
+      numAdjacent = 5;
+    } else {
+      //Reached if the cell is not on any wall of the grid.
+      numAdjacent = 8;
+    }
+
+    return numAdjacent;
   }
 }

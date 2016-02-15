@@ -6,9 +6,9 @@ import java.awt.Point;
 public class Plant extends Cell {
   private static final long serialVersionUID = 1L;
 
-  public void init() {
+  public void init(World world) {
     setBackground(Color.GREEN);
-    repaint();
+    setWorld(world);
   }
   
   public void setCell(Point point) {
