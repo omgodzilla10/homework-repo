@@ -6,6 +6,15 @@
 #define LINESIZE 1024
 
 /*
+	This program will allow the user to enter student records (a student ID and a grade)
+	to a text file. The user is able to append new student records, modify existing
+	student records, and display all students.
+	
+	Author: Trevor Hoefsloot
+	Feb 12th, 2016
+*/
+
+/*
 	Returns true if the passed in string is a valid student ID.
 */
 int valid_std_id (char word[]) {
@@ -38,8 +47,8 @@ int valid_std_id (char word[]) {
 /*
 	Prints the given row, student ID, and grade, to the file.
 */
-void append_to_file(FILE *fp, int row, char stdId[], char gradeStr[]) {
-	fprintf(fp, "%d %s ", row, stdId);
+void append_to_file(FILE *fp, char stdId[], char gradeStr[]) {
+	fprintf(fp, "%s ", stdId);
 	
 	if (strlen(gradeStr) == 1) {
 		fprintf(fp, "%s  ", gradeStr);
@@ -56,67 +65,72 @@ void append_to_file(FILE *fp, int row, char stdId[], char gradeStr[]) {
 	Prompts the user for a student id and a score, and appends
 	the student's information to the file.
 */
-int append_student(FILE *fp, int row) {
-	char entered_string[LINESIZE];
+int append_student(FILE *fp) {
+	char enteredString[LINESIZE];
 	char stdId[LINESIZE];
 	char gradeStr[LINESIZE];
-	char promptId[] = "Please enter the student's ID.";
-	char promptGrade[] = "Please enter the student's grade.";
+	char promptId[] = "Enter the student's ID.";
+	char promptGrade[] = "Enter the student's grade.";
 	int grade = 0;
 	
 	/* Prompt the user for the student ID. */
 	while (1) {
 		printf("%s\n", promptId);
-		if (fgets(entered_string, LINESIZE, stdin)) {
-			sscanf(entered_string, "%s", stdId);
+		if (fgets(enteredString, LINESIZE, stdin)) {
+			if (sscanf(enteredString, "%s", stdId) == 1) {
 			
-			if (strcmp(stdId, "-1") == 0) {
-				return 0;
-			}
-			
-			if (valid_std_id(stdId)) {
-				break;
+				if (strcmp(stdId, "-1") == 0) {
+					return 0;
+				}
+				
+				if (valid_std_id(stdId)) {
+					break;
+				}
 			}
 		} else {
 			clearerr(stdin);
+			return 0;
 		}
 	}
 	
 	/* Prompt the user for the student' score. */
 	while (1) {
 		printf("%s\n", promptGrade);
-		if (fgets(entered_string, LINESIZE, stdin)) {
-			sscanf(entered_string, "%d", &grade);
-			sscanf(entered_string, "%s", gradeStr);
+		if (fgets(enteredString, LINESIZE, stdin)) {
+			if (sscanf(enteredString, "%d", &grade) == 1 &&
+				sscanf(enteredString, "%s", gradeStr) == 1) {
 			
-			if (strcmp(gradeStr, "-1") == 0) {
-					return 0;
+				if (strcmp(gradeStr, "-1") == 0) {
+						return 0;
+				}
+				
+				if (grade > 100) {
+					printf("\n%s\n", "Grade cannot be above 100.");
+				} else if (grade < -1) {
+					printf("\n%s\n", "Grade cannot be below 0.");
+				} else break;
 			}
-			
-			if (grade > 100) {
-				printf("\n%s\n", "Grade cannot be above 100.");
-			} else if (grade < -1) {
-				printf("\n%s\n", "Grade cannot be below 0.");
-			} else break;
 		} else {
 			clearerr(stdin);
+			return 0;
 		}
 	}
 	
-	append_to_file(fp, row, stdId, gradeStr);
+	append_to_file(fp, stdId, gradeStr);
 	return 1;
 }
 
 /*
 	Seeks to the given row number in the file.
+	Returns the length of each row.
 */
 int seek_to_row(FILE *fp, int row) {
 	int rowLength = 0;
-	char entered_string[LINESIZE];
+	char enteredString[LINESIZE];
 	
 	fseek(fp, 0, SEEK_SET);
-	if(fgets(entered_string, LINESIZE, fp)) {
-		rowLength = strlen(entered_string);
+	if(fgets(enteredString, LINESIZE, fp)) {
+		rowLength = strlen(enteredString);
 		fseek(fp, rowLength * (row - 1), SEEK_SET);
 	}
 	
@@ -125,20 +139,23 @@ int seek_to_row(FILE *fp, int row) {
 
 /*
 	Prints the student information at the given row.
+	Returns 1 if the student is printed successfully.
 */
 int print_student_at(FILE *fp, int row) {
 	char stdId[LINESIZE];
-	char entered_string[LINESIZE];
+	char enteredString[LINESIZE];
 	int grade = 0;
 	int rowLength = 0;
 	
 	rowLength = seek_to_row(fp, row);
 	
-	if (fgets(entered_string, rowLength, fp)) {
-		sscanf(entered_string, "%d %s %d", &row, stdId, &grade);
-		fprintf(stderr, "%d %s %d\n", row, stdId, grade);
-		fseek(fp, rowLength * (row - 1), SEEK_SET);
-		return 1;
+	/* Prints the row if it exists. */
+	if (fgets(enteredString, rowLength, fp)) {
+		if ((sscanf(enteredString, "%s %d", stdId, &grade) == 2)) {
+			fprintf(stderr, "%d %s %d\n", row, stdId, grade);
+			fseek(fp, rowLength * (row - 1), SEEK_SET);
+			return 1;
+		}
 	}
 	
 	return 0;
@@ -151,7 +168,7 @@ int print_student_at(FILE *fp, int row) {
 void modify(FILE *fp, int idx) {
 	if (idx > 0) {
 		if (print_student_at(fp, idx)) {
-			append_student(fp, idx);
+			append_student(fp);
 		}
 	}
 }
@@ -159,21 +176,23 @@ void modify(FILE *fp, int idx) {
 /*
 	Prints the information for each student.
 */
-void displayAll(FILE *fp) {
+void display_all(FILE *fp) {
 	char word[LINESIZE];
-	char entered_string[LINESIZE];
-	int row;
+	char enteredString[LINESIZE];
+	int row = 1;
 	int grade = 0;
 	fseek(fp, 0, SEEK_SET);
 	
-	while (fgets(entered_string, LINESIZE, fp)) {
-		sscanf(entered_string, "%d %s %d", &row, word, &grade);
-		fprintf(stderr, "%d %s %d\n", row, word, grade);
-		
-		if (*word == EOF) {
-			break;
-		} else {
-			clearerr(stdin);
+	/* Loop through and print each line. */
+	while (fgets(enteredString, LINESIZE, fp)) {
+		if (sscanf(enteredString, "%s %d", word, &grade) == 2) {
+			fprintf(stderr, "%d %s %d\n", row++, word, grade);
+			
+			if (*word == EOF) {
+				break;
+			} else {
+				clearerr(stdin);
+			}
 		}
 	}
 }
@@ -192,12 +211,12 @@ size_t prompt_user (void) {
 	printf("\n - Enter -2 to exit the application\n\n");
 	
 	if (fgets(readSelection, LINESIZE, stdin)) {
-		sscanf(readSelection, "%d", &selection);
-		return selection;
-	} else {
-		clearerr(stdin);
-		return 0;
+		if (sscanf(readSelection, "%d", &selection) == 1) {
+			return selection;
+		}
 	}
+	
+	return -3;
 }
 
 /*
@@ -205,7 +224,7 @@ size_t prompt_user (void) {
 	argument.
 */
 int main (int argc, char *argv[]) {
-	int user_response = 0;
+	int userResponse = 0;
 	int row = 1;
 	FILE *fp;
 	
@@ -214,26 +233,28 @@ int main (int argc, char *argv[]) {
 		if ((fp = fopen(argv[1], "wb+")) == 0) {
 			perror("fopen failed");
 			return 0;
-		}
-		
-		while (user_response != -2) {
-			user_response = prompt_user();
-			
-			switch (user_response) {
-				case -2: return 0;
-				case -1: 
-					if (append_student(fp, row))
-						row++;
-					break;
-				case 0: displayAll(fp);
-					break;
-				default: modify(fp, user_response);
-			}
+		} else {
+			while (userResponse != -2) {
+				userResponse = prompt_user();
+				
+				switch (userResponse) {
+					case -2: return 0;
+					case -1: 
+						if (append_student(fp))
+							row++;
+						break;
+					case 0: display_all(fp);
+						break;
+					case -3: break;
+					default: modify(fp, userResponse);
+				}
+			}	
 		}
 	} else {
 		perror("Missing file name");
 	}
 	
+	fprintf(fp, "\n");
 	fclose(fp);
 	return 0;
 }
