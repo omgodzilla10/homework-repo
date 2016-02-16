@@ -18,4 +18,13 @@ public class Plant extends Cell {
   public boolean isEdible() {
     return true;
   }
+  
+  /**
+   * Returns the cell's type
+   * 
+   * @return the cell's type
+   */
+  public World.CellType getCellType() {
+    return World.CellType.Plant;
+  }
 }

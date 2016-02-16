@@ -18,4 +18,13 @@ public class Herbivore extends Animal {
   public void move(Point point) {
     super.move(point);
   }
+  
+  /**
+   * Returns the cell's type
+   * 
+   * @return the cell's type
+   */
+  public World.CellType getCellType() {
+    return World.CellType.Herbivore;
+  }
 }

@@ -22,7 +22,7 @@ public class TurnListener implements MouseListener {
    */
   @Override
   public void mouseClicked(MouseEvent arg0) {
-    //frame.takeTurn();
+    frame.takeTurn();
   }
   
   /** Unused implemented method. */

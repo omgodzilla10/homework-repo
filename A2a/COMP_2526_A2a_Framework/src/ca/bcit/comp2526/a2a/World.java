@@ -23,7 +23,7 @@ public class World {
   /** A 2-dimensional array containing every cell on the board. */
   private static Cell[][] cellArray;
 
-  private enum CellType {
+  enum CellType {
     Plant,
     Herbivore,
     Empty;
@@ -88,9 +88,9 @@ public class World {
   public void init() {
     for (int row = 0; row < gridSize.height; row++) {
       for (int col = 0; col < gridSize.width; col++) {
-        fillCell(row, col);
-        cellArray[row][col].init(this);
-        cellArray[row][col].setCell(new Point(col, row));
+        fillCell(col, row);
+        cellArray[col][row].init(this);
+        cellArray[col][row].setCell(new Point(col, row));
       }
     }
   }
@@ -101,8 +101,34 @@ public class World {
   public void takeTurn() {
     for (int row = 0; row < gridSize.height; row++) {
       for (int col = 0; col < gridSize.width; col++) {
-        cellArray[row][col].takeTurn();
-        cellArray[row][col].repaint();
+        cellArray[col][row].takeTurn();
+      }
+    }
+    
+    /** Reset the moved status for all cells. */
+    for (int row = 0; row < gridSize.height; row++) {
+      for (int col = 0; col < gridSize.width; col++) {
+        cellArray[col][row].setMoved(false);
+      }
+    }
+    
+    refreshCells();
+  }
+  
+  /**
+   * Refreshes the array of cells so that indices properly reflect
+   * the actual cell locations.
+   */
+  public void refreshCells() {
+    Point cellPosition = new Point();
+    
+    for (int row = 0; row < gridSize.height; row++) {
+      for (int col = 0; col < gridSize.width; col++) {
+        cellPosition = cellArray[col][row].getLocation();
+        
+        if (cellPosition.x != col || cellPosition.y != row) {
+          cellArray[col][row].setLocation(col, row);
+        }
       }
     }
   }
@@ -114,7 +140,7 @@ public class World {
    * @param row - The row to create the new cell on
    * @param col - The column to create the new cell on
    */
-  private void fillCell(int row, int col) {
+  private void fillCell(int col, int row) {
     int rand;
     CellType newCell;
 
@@ -122,7 +148,7 @@ public class World {
     rand = RandomGenerator.nextNumber(100);
     newCell = CellType.getRandomCell(rand);
 
-    cellArray[row][col] = CellType.getNewCell(newCell);
+    cellArray[col][row] = CellType.getNewCell(newCell);
   }
 
   /**
@@ -148,8 +174,8 @@ public class World {
    * 
    * @return cell at specified location
    */
-  public Cell getCellAt(int row, int col) {
-    return cellArray[row][col];
+  public Cell getCellAt(int col, int row) {
+    return cellArray[col][row];
   }
 
   /**
@@ -158,7 +184,7 @@ public class World {
    * @return cell at specified location
    */
   public Cell getCellAt(Point point) {
-    return cellArray[(int) point.getY()][(int) point.getX()];
+    return cellArray[(int) point.getX()][(int) point.getY()];
   }
   
   /**
@@ -175,10 +201,10 @@ public class World {
 
     for (int row = -1; row <= 1; row++) {
       for (int col = -1; col <= 1; col++) {
-        if ((row != 0 && col != 0) && position.x + col >= 0 
+        if (!(row == 0 && col == 0) && position.x + col >= 0 
             && position.x + col < getColumnCount()
             && position.y + row >= 0 && position.y + row < getRowCount()) {
-          adjCells[idx++] = getCellAt(position.y + row, position.x + col);
+          adjCells[idx++] = getCellAt(position.x + col, position.y + row);
         }
       }
     }
@@ -211,5 +237,15 @@ public class World {
     }
 
     return numAdjacent;
+  }
+  
+  /**
+   * Removes the specified cell.
+   * 
+   * @param cell the specified cell
+   */
+  public void removeCell(Cell cell) {
+    Point cellLocation = cell.getLocation();
+    cellArray[cellLocation.x][cellLocation.y] = new Cell();
   }
 }

@@ -14,12 +14,15 @@ public abstract class Animal extends Cell {
   }
   
   private void moveRandom() {
-    int rand;
     Cell[] adjCells = getAdjacentCells();
+    int rand = RandomGenerator.nextNumber(adjCells.length - 1);
     
-    rand = RandomGenerator.nextNumber(adjCells.length - 1);
-    move(adjCells[rand].getLocation());
-    
+    if (canMove(adjCells)) {
+      while (!adjCells[rand].isEdible())
+        rand = RandomGenerator.nextNumber(adjCells.length - 1);
+      
+      move(adjCells[rand].getLocation());
+    }
   }
   
   /**
@@ -28,15 +31,35 @@ public abstract class Animal extends Cell {
    * @param point the position to move to
    */
   public void move(Point point) {
-    if (getCellAt(point.y, point.x).isEdible()) {
-      eat(point);
+    if (!hasMoved()) {
+      if (getCellAt(point.x, point.y).isEdible()) {
+        eat(point);
+      } else {
+        moveRandom();
+      }
+      
+      setCell(point);
+      setMoved(true);
     }
-    
-    setCell(point);
   }
   
   public void eat(Point point) {
-    Cell cell = getCellAt(point.y, point.x);
+    Cell cell = getCellAt(point.x, point.y);
     cell.remove();
+  }
+  
+  /**
+   * Returns whether or not this cell can move during its turn.
+   * 
+   * @param the cells adjacent to this cell
+   * @return whether or not the cell can move
+   */
+  public boolean canMove(Cell[] adjCells) {
+    for (Cell cell : adjCells) {
+      if (cell.isEdible() || cell.getCellType() == World.CellType.Empty)
+        return true;
+    }
+    
+    return false;
   }
 }

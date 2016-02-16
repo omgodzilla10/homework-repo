@@ -15,6 +15,9 @@ public class Cell extends JPanel {
   /** The serial version ID. */
   private static final long serialVersionUID = 1L;
   
+  /** Whether or not the cell has moved yet. */
+  private boolean moved;
+  
   /** The current position of the cell on the grid. */
   private Point position;
   
@@ -26,6 +29,7 @@ public class Cell extends JPanel {
    */
   public Cell() {
     position = new Point();
+    moved = false;
   }
   
   /**
@@ -78,15 +82,15 @@ public class Cell extends JPanel {
    * 
    * @return the cell at the location
    */
-  public Cell getCellAt(int row, int col) {
-    return world.getCellAt(row, col);
+  public Cell getCellAt(int col, int row) {
+    return world.getCellAt(col, row);
   }
   
   /**
-   * Removes the cell.
+   * Sets the cell to an empty cell.
    */
   public void remove() {
-    init(world);
+    world.removeCell(this);
   }
   
   /**
@@ -96,6 +100,33 @@ public class Cell extends JPanel {
    */
   public void setWorld(World world) {
     this.world = world;
+  }
+  
+  /**
+   * Whether or not the cell has moved this turn.
+   * 
+   * @return whether the cell has moved or not
+   */
+  public boolean hasMoved() {
+    return moved;
+  }
+  
+  /**
+   * Sets whether or not the cell has moved in the current turn.
+   * 
+   * @param moved whether or not the cell has moved.
+   */
+  public void setMoved(boolean moved) {
+    this.moved = moved;
+  }
+  
+  /**
+   * Returns the cell's type
+   * 
+   * @return the cell's type
+   */
+  public World.CellType getCellType() {
+    return World.CellType.Empty;
   }
   
   /**
