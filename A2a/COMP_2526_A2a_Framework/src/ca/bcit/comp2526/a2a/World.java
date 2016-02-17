@@ -105,14 +105,12 @@ public class World {
       }
     }
     
-    /** Reset the moved status for all cells. */
+    // Reset the moved status for all cells.
     for (int row = 0; row < gridSize.height; row++) {
       for (int col = 0; col < gridSize.width; col++) {
         cellArray[col][row].setMoved(false);
       }
     }
-    
-    refreshCells();
   }
   
   /**
@@ -240,12 +238,49 @@ public class World {
   }
   
   /**
+   * Swaps the specified cells.
+   * 
+   * @param cell1 the first cell
+   * @param cell2 the second cell
+   */
+  public void swapCells(Cell cell1, Cell cell2) {
+    Point tempCellLocation = cell1.getCellLocation();
+    Point tempLocation = cell1.getLocation();
+    
+    System.out.println("\nInitial positions: ");
+    System.out.println("Cell 1: " + cell1.getCellLocation().x + ", " + cell1.getCellLocation().y);
+    System.out.println("Cell 2: " + cell2.getCellLocation().x + ", " + cell2.getCellLocation().y);
+    
+    cell1.setCellLocation(cell2.getCellLocation());
+    cell2.setCellLocation(tempCellLocation);
+    
+    cell1.setCell(cell2.getLocation());
+    cell2.setCell(tempLocation);
+    
+    //Rearrange positions in the cell array
+    Point cell1Position = cell1.getLocation();
+    Point cell2Position = cell2.getLocation();
+    
+    cellArray[cell1Position.x][cell1Position.y] = cell1;
+    cellArray[cell2Position.x][cell2Position.y] = cell2;
+    
+    System.out.println("\nFinal positions: ");
+    System.out.println("Cell 1: " + cell1.getCellLocation().x + ", " + cell1.getCellLocation().y);
+    System.out.println("Cell 2: " + cell2.getCellLocation().x + ", " + cell2.getCellLocation().y);
+  }
+  
+  /**
    * Removes the specified cell.
    * 
    * @param cell the specified cell
    */
   public void removeCell(Cell cell) {
     Point cellLocation = cell.getLocation();
+    Point cellActualLocation = cell.getCellLocation();
+      
     cellArray[cellLocation.x][cellLocation.y] = new Cell();
+    cellArray[cellLocation.x][cellLocation.y].init(this);
+    cellArray[cellLocation.x][cellLocation.y].setCell(new Point(cellLocation.x, cellLocation.y));
+    cellArray[cellLocation.x][cellLocation.y].setCellLocation(cellActualLocation);
   }
 }

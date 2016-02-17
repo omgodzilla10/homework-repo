@@ -19,6 +19,20 @@ public class Herbivore extends Animal {
     super.move(point);
   }
   
+  public boolean eat(Cell cell) {
+    if (cell instanceof HerbivoreEdible) {
+      Point cellPosition = cell.getLocation();
+      cell.remove();
+      
+      swapCells(getCellAt(cellPosition.x, cellPosition.y), this);
+      setMoved(true);
+      
+      return true;
+    }
+    
+    return false;
+  }
+  
   /**
    * Returns the cell's type
    * 

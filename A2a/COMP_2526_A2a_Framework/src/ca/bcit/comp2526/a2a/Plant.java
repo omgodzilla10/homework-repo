@@ -3,7 +3,7 @@ package ca.bcit.comp2526.a2a;
 import java.awt.Color;
 import java.awt.Point;
 
-public class Plant extends Cell {
+public class Plant extends Cell implements HerbivoreEdible {
   private static final long serialVersionUID = 1L;
 
   public void init(World world) {

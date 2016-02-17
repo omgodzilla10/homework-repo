@@ -3,6 +3,9 @@ package ca.bcit.comp2526.a2a;
 import java.awt.Color;
 import java.awt.Point;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.plaf.basic.BasicBorders;
 
 /**
  * The parent class of all cells.
@@ -30,6 +33,7 @@ public class Cell extends JPanel {
   public Cell() {
     position = new Point();
     moved = false;
+    setBorder(new SoftBevelBorder(0, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK));
   }
   
   /**
@@ -58,7 +62,25 @@ public class Cell extends JPanel {
   public Point getLocation() {
     return position;
   }
-
+  
+  /**
+   * Returns the actual location of the cell on the frame.
+   * 
+   * @return the cell's location
+   */
+  public Point getCellLocation() {
+    return super.getLocation();
+  }
+  
+  /**
+   * Sets the actual location of the cell on the frame.
+   * 
+   * @param newPoint the new location of the cell
+   */
+  public void setCellLocation(Point newPoint) {
+    super.setLocation(newPoint);
+  }
+  
   /**
    * Returns every adjacent cell in an array.
    * 
@@ -127,6 +149,10 @@ public class Cell extends JPanel {
    */
   public World.CellType getCellType() {
     return World.CellType.Empty;
+  }
+  
+  public void swapCells(Cell cell1, Cell cell2) {
+    world.swapCells(cell1, cell2);
   }
   
   /**

@@ -15,13 +15,14 @@ public abstract class Animal extends Cell {
   
   private void moveRandom() {
     Cell[] adjCells = getAdjacentCells();
-    int rand = RandomGenerator.nextNumber(adjCells.length - 1);
+    int rand = RandomGenerator.nextNumber(adjCells.length);
     
     if (canMove(adjCells)) {
-      while (!adjCells[rand].isEdible())
-        rand = RandomGenerator.nextNumber(adjCells.length - 1);
+      while (!adjCells[rand].isEdible() && adjCells[rand].getCellType() != World.CellType.Empty)
+        rand = RandomGenerator.nextNumber(adjCells.length);
       
-      move(adjCells[rand].getLocation());
+      if (!eat(adjCells[rand]))
+        move(adjCells[rand].getLocation());
     }
   }
   
@@ -32,20 +33,21 @@ public abstract class Animal extends Cell {
    */
   public void move(Point point) {
     if (!hasMoved()) {
-      if (getCellAt(point.x, point.y).isEdible()) {
-        eat(point);
-      } else {
-        moveRandom();
-      }
-      
-      setCell(point);
+      getCellAt(point.x, point.y).setMoved(true);
+      swapCells(getCellAt(point.x, point.y), this);
       setMoved(true);
     }
   }
   
-  public void eat(Point point) {
-    Cell cell = getCellAt(point.x, point.y);
+  public boolean eat(Cell cell) {
+    Point cellPosition = cell.getLocation();
     cell.remove();
+    
+    getCellAt(cellPosition.x, cellPosition.y).setMoved(true);
+    swapCells(cell, this);
+    setMoved(true);
+    
+    return true;
   }
   
   /**
