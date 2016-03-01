@@ -26,62 +26,77 @@ void translate_string(char *entered_string, char set1[], char set2[]) {
 	}
 }
 
-void copy_set(char argv[], char set[]) { 
-	int i;
-	int j = 0;
+/*
+	Parses hyphens from the command-line argument and places letters into the
+	passed in set. Returns 0 if no hyphen was parsed, or if a hyphen is parsed, 
+	returns the new position in the set.
+*/
+int parse_hyphen(char argv[], char set[], int currentArgIndex, int currentSetIndex) {
 	char initChar;
 	char finalChar;
 	
-	char nextChar;
-	for (i = 0; argv[i] != '\0'; i++) {
-		if (argv[i] == '\\') {
-			if ((nextChar = argv[i + 1]) != '\0') {
-				switch (nextChar) {
-					case '\\': set[j++] = '\\';
-						i++;
-						break;
-					case 'a': set[j++] = '\a';
-						i++;
-						break;
-					case 'b': set[j++] = '\b';
-						i++;
-						break;
-					case 'f': set[j++] = '\f';
-						i++;
-						break;
-					case 'n': set[j++] = '\n';
-						i++;
-						break;
-					case 'r': set[j++] = '\r';
-						i++;
-						break;
-					case 't': set[j++] = '\t';
-						i++;
-						break;
-					case 'v': set[j++] = '\v';
-						i++;
-						break;
-					case '\'': set[j++] = '\'';
-						i++;
-						break;
-					case '"': set[j++] =  '"';
-						i++;
-						break;
-				}
+	if (argv[currentArgIndex] == '-') {
+		if ((currentArgIndex - 1) >= 0 && argv[currentArgIndex + 1] != '\0' 
+			&& isalpha(argv[currentArgIndex - 1]) && isalpha(argv[currentArgIndex + 1])) {
+			initChar = argv[currentArgIndex - 1];
+			finalChar = argv[currentArgIndex + 1];
+			
+			while (initChar <= finalChar) {
+				set[currentSetIndex++] = initChar++;
 			}
-		} else if (argv[i] == '-') {
-			if ((i - 1) >= 0 && argv[i + 1] != '\0' && isalpha(argv[i - 1])
-				&& isalpha(argv[i + 1])) {
-				initChar = argv[i - 1];
-				finalChar = argv[i + 1];
-				
-				while (initChar <= finalChar) {
-					set[j++] = initChar++;
-				}
-			} else set[j++] = argv[i];
-		} else {
-			set[j++] = argv[i];
+			
+			return currentSetIndex;
 		}
+	}
+	
+	return 0;
+}
+
+int parse_escape(char argv[], char set[], int currentArgIndex, int currentSetIndex) {
+	if (argv[currentArgIndex] == '\\') {
+		if (argv[currentArgIndex + 1] != '\0') {
+			switch (argv[currentArgIndex + 1]) {
+				case '\\': set[currentSetIndex++] = '\\';
+					return currentSetIndex;
+				case 'a': set[currentSetIndex++] = '\a';
+					return currentSetIndex;
+				case 'b': set[currentSetIndex++] = '\b';
+					return currentSetIndex;
+				case 'f': set[currentSetIndex++] = '\f';
+					return currentSetIndex;
+				case 'n': set[currentSetIndex++] = '\n';
+					return currentSetIndex;
+				case 'r': set[currentSetIndex++] = '\r';
+					return currentSetIndex;
+				case 't': set[currentSetIndex++] = '\t';
+					return currentSetIndex;
+				case 'v': set[currentSetIndex++] = '\v';
+					return currentSetIndex;
+				case '\'': set[currentSetIndex++] = '\'';
+					return currentSetIndex;
+				case '"': set[currentSetIndex++] =  '"';
+					return currentSetIndex;
+			}
+		}
+	}
+	
+	return 0;
+}
+
+void copy_set(char argv[], char set[]) { 
+	int i;
+	int j = 0;
+	int parsedEscape = 0;
+	int parsedHyphen = 0;
+	
+	for (i = 0; argv[i] != '\0'; i++) {
+		if ((parsedEscape = parse_escape(argv, set, i, j)) == 0)
+			set[j++] = argv[i++];
+		else j = parsedEscape;
+		
+		if ((parsedHyphen = parse_hyphen(argv, set, i, j)) == 0)
+			set[j++] = argv[i];
+		else j = parsedHyphen;
 	}
 }
 
