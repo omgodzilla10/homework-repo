@@ -6,7 +6,7 @@
 
 int string_contains(char x, char string[]) {
 	int i;
-	for (i = 0; string[i] != '\0'; i++) {
+	for (i = strlen(string); i >= 0; i--) {
 		if (string[i] == x)
 			return i;
 	}
@@ -41,7 +41,8 @@ int parse_hyphen(char argv[], char set[], int currentArgIndex, int currentSetInd
 			initChar = argv[currentArgIndex - 1];
 			finalChar = argv[currentArgIndex + 1];
 			
-			while (initChar <= finalChar) {
+			currentSetIndex--;
+			while (initChar != finalChar) {
 				set[currentSetIndex++] = initChar++;
 			}
 			
@@ -49,7 +50,7 @@ int parse_hyphen(char argv[], char set[], int currentArgIndex, int currentSetInd
 		}
 	}
 	
-	return 0;
+	return -1;
 }
 
 int parse_escape(char argv[], char set[], int currentArgIndex, int currentSetIndex) {
@@ -80,7 +81,7 @@ int parse_escape(char argv[], char set[], int currentArgIndex, int currentSetInd
 		}
 	}
 	
-	return 0;
+	return -1;
 }
 
 void copy_set(char argv[], char set[]) { 
@@ -90,13 +91,12 @@ void copy_set(char argv[], char set[]) {
 	int parsedHyphen = 0;
 	
 	for (i = 0; argv[i] != '\0'; i++) {
-		if ((parsedEscape = parse_escape(argv, set, i, j)) == 0)
-			set[j++] = argv[i++];
-		else j = parsedEscape;
-		
-		if ((parsedHyphen = parse_hyphen(argv, set, i, j)) == 0)
-			set[j++] = argv[i];
-		else j = parsedHyphen;
+		if ((parsedEscape = parse_escape(argv, set, i, j)) != -1) {
+			j = parsedEscape;
+			i++;
+		} else if ((parsedHyphen = parse_hyphen(argv, set, i, j)) != -1) {
+			j = parsedHyphen;
+		} else set[j++] = argv[i];
 	}
 }
 
@@ -112,6 +112,7 @@ int main(int argc, char *argv[]) {
 	
 	if (argc == 3) {
 		parse_sets(argv[1], argv[2], set1, set2);
+		printf("%s %s", set1, set2);
 		while (fgets(entered_string, LINESIZE, stdin)) {
 			translate_string(entered_string, set1, set2);
 			printf(entered_string);
